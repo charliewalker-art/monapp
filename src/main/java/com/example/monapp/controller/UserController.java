@@ -26,15 +26,19 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // add  mew user
+    // add  new user
     @PostMapping
     public User createUser(@RequestBody User user) {
-
         return userService.createUser(
                 user.getName(),
                 user.getEmail(),
                 user.getPassword()
         );
     }
+    @GetMapping("/emails")
+    public List<String> getEmails() {
+        return userService.show_all_mail();
+    }
+
 
 }

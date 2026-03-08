@@ -25,15 +25,31 @@ public class UserService {
     // add new user
     public User createUser(String name, String email, String password) {
 
+        if (name == null || name.isBlank()) {
+            throw new RuntimeException("Name is required");
+        }
+
+        if (email == null || email.isBlank()) {
+            throw new RuntimeException("Email is required");
+        }
+
+        if (password.length() < 6) {
+            throw new RuntimeException("Password must be at least 6 characters");
+        }
+
         User user = new User();
 
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
 
-       return userRepository.save(user);
+        return userRepository.save(user);
     }
 
+
+    public List<String> show_all_mail() {
+        return userRepository.show_all_mail();
+    }
 
 
 }
