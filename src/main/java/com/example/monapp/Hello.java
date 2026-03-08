@@ -9,6 +9,9 @@ public class Hello {
     public String sayHello() {
         return "Hello, World!";
     }
+    public String sasyHello() {
+        return "Hello, World!";
+    }
 
 
 
