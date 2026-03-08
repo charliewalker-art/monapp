@@ -1,5 +1,6 @@
 package com.example.monapp.controller;
 
+import com.example.monapp.dto.ApiResponse;
 import com.example.monapp.dto.UserRequestDto;
 import com.example.monapp.dto.UserResponseDto;
 import com.example.monapp.service.UserService;
@@ -27,7 +28,7 @@ public class UserController {
 
     // add new user
     @PostMapping
-    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ApiResponse createUser(@RequestBody UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
 

@@ -1,5 +1,6 @@
 package com.example.monapp.service;
 
+import com.example.monapp.dto.ApiResponse;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import com.example.monapp.dto.UserRequestDto;
 import com.example.monapp.dto.UserResponseDto;
 import com.example.monapp.entity.User;
 import com.example.monapp.repository.UserRepository;
+
 
 @Service
 public class UserService {
@@ -33,32 +35,49 @@ public class UserService {
     }
 
     // add new user
-    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+    public ApiResponse createUser(UserRequestDto userRequestDto) {
 
-        if (userRequestDto.name() == null || userRequestDto.name().isBlank()) {
-            throw new RuntimeException("Name is required");
+        try {
+
+            if (userRequestDto.name() == null || userRequestDto.name().isBlank()) {
+                throw new Exception("Name is required");
+            }
+
+            if (userRequestDto.email() == null || userRequestDto.email().isBlank()) {
+                throw new Exception("Email is required");
+            }
+
+            if (userRequestDto.password() == null || userRequestDto.password().length() < 6) {
+                throw new Exception("Password must be at least 6 characters");
+            }
+
+            User user = new User();
+
+            user.setName(userRequestDto.name());
+            user.setEmail(userRequestDto.email());
+            user.setPassword(userRequestDto.password());
+
+            User savedUser = userRepository.save(user);
+
+            UserResponseDto userResponse = new UserResponseDto(
+                    savedUser.getId(),
+                    savedUser.getName(),
+                    savedUser.getEmail()
+            );
+
+            return new ApiResponse(
+                    "User created successfully",
+                    userResponse
+            );
+
+        } catch (Exception e) {
+
+            return new ApiResponse(
+                    e.getMessage(),
+                    null
+            );
+
         }
-
-        if (userRequestDto.email() == null || userRequestDto.email().isBlank()) {
-            throw new RuntimeException("Email is required");
-        }
-
-        if (userRequestDto.password() == null || userRequestDto.password().length() < 6) {
-            throw new RuntimeException("Password must be at least 6 characters");
-        }
-
-        User user = new User();
-        user.setName(userRequestDto.name());
-        user.setEmail(userRequestDto.email());
-        user.setPassword(userRequestDto.password());
-
-        User savedUser = userRepository.save(user);
-
-        return new UserResponseDto(
-                savedUser.getId(),
-                savedUser.getName(),
-                savedUser.getEmail()
-        );
     }
 
     public List<String> show_all_mail() {
